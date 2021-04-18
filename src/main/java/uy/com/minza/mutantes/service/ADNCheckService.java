@@ -5,8 +5,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uy.com.minza.mutantes.error.exception.ValidationException;
 import uy.com.minza.mutantes.utils.StringUtils;
+import uy.com.minza.mutantes.utils.validation.MatrixEntriesConstraint;
+import uy.com.minza.mutantes.utils.validation.SquareMatrixConstraint;
 
-import java.util.Arrays;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Servicio Spring que realiza verificaciones sobre secuencias de ADNs.
@@ -85,14 +91,15 @@ public class ADNCheckService {
      *
      * @param dna
      */
-    public void validate(final String[] dna) {
-        // Validamos que el largo de cada fila coincida con la cantidad de filas
-        if (Arrays.stream(dna).anyMatch(row -> dna.length != row.length())) {
-            throw new ValidationException(String.format("La representación del ADN debe ser una matriz cuadrada de %dx%d", dna.length, dna.length));
-        }
-        // Validamos que las entradas solo sean las entradas válidas
-        if (Arrays.stream(dna).anyMatch(row -> !this.stringUtils.containsOnly(row, this.allowedEntries.toCharArray()))) {
-            throw new ValidationException(String.format("Las entradas válidas para los elementos de la matriz de ADN son %s", this.allowedEntries));
+    public void validate(final @MatrixEntriesConstraint @SquareMatrixConstraint String[] dna) {
+        final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        final Set<ConstraintViolation<String[]>> validationResult = validator.validate(dna);
+        if (!validationResult.isEmpty()) {
+            throw new ValidationException("La representación del ADN no es válida: " +
+                    validationResult.stream()
+                            .map(violation -> violation.getMessage())
+                            .collect(Collectors.joining(". "))
+            );
         }
     }
 }

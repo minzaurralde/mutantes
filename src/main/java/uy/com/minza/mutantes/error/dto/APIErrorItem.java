@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Información de un error detallado
@@ -20,6 +22,8 @@ import lombok.Data;
 )
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class APIErrorItem {
 
     /**
