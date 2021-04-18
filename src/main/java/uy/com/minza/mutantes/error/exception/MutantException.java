@@ -14,7 +14,7 @@ public abstract class MutantException extends RuntimeException {
     protected boolean doLogTrace = false;
 
     public MutantException(boolean writableStackTrace) {
-        this.doLogTrace = doLogTrace;
+        this.doLogTrace = writableStackTrace;
     }
 
     public MutantException(String message, boolean writableStackTrace) {
