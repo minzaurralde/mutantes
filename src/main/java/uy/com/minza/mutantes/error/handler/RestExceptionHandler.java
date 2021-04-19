@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import uy.com.minza.mutantes.error.dto.APIError;
 import uy.com.minza.mutantes.error.dto.APIErrorItem;
-import uy.com.minza.mutantes.error.exception.ConflictException;
-import uy.com.minza.mutantes.error.exception.ResourceDeletedException;
-import uy.com.minza.mutantes.error.exception.ResourceNotFoundException;
 import uy.com.minza.mutantes.error.exception.ValidationException;
 
 import java.time.LocalDateTime;
@@ -41,36 +38,6 @@ public class RestExceptionHandler {
         return this.buildResponseEntity(APIError.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .message("Ocurrió un error inesperado.")
-                .debugMessage(exs.getMessage())
-                .timestamp(LocalDateTime.now())
-                .build());
-    }
-
-    @ExceptionHandler({ResourceNotFoundException.class})
-    public ResponseEntity<?> resourceNotFound(ResourceNotFoundException exs) {
-        return this.buildResponseEntity(APIError.builder()
-                .status(HttpStatus.NOT_FOUND.value())
-                .message("El recurso no fue encontrado.")
-                .debugMessage(exs.getMessage())
-                .timestamp(LocalDateTime.now())
-                .build());
-    }
-
-    @ExceptionHandler({ResourceDeletedException.class})
-    public ResponseEntity<?> resourceDeleted(ResourceDeletedException exs) {
-        return this.buildResponseEntity(APIError.builder()
-                .status(HttpStatus.GONE.value())
-                .message("El recurso ha sido eliminado.")
-                .debugMessage(exs.getMessage())
-                .timestamp(LocalDateTime.now())
-                .build());
-    }
-
-    @ExceptionHandler({ConflictException.class})
-    public ResponseEntity<?> conflict(ConflictException exs) {
-        return this.buildResponseEntity(APIError.builder()
-                .status(HttpStatus.CONFLICT.value())
-                .message("El recurso ya existe.")
                 .debugMessage(exs.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());

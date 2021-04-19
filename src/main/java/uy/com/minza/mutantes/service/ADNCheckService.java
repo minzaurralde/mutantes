@@ -3,10 +3,10 @@ package uy.com.minza.mutantes.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import springfox.documentation.annotations.Cacheable;
+import uy.com.minza.mutantes.dto.DNADTO;
 import uy.com.minza.mutantes.error.exception.ValidationException;
 import uy.com.minza.mutantes.utils.StringUtils;
-import uy.com.minza.mutantes.utils.validation.MatrixEntriesConstraint;
-import uy.com.minza.mutantes.utils.validation.SquareMatrixConstraint;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -24,28 +24,12 @@ import java.util.stream.Collectors;
 public class ADNCheckService {
 
     /**
-     * Caracteres permitidos en las entradas de ADN
-     */
-    private final String allowedEntries;
-    /**
-     * Servicio de utilidades de Strings
-     */
-    private final StringUtils stringUtils;
-
-    public ADNCheckService(
-            @Value("${mutants.allowedEntries:ATCG}") String allowedEntries,
-            @Autowired StringUtils stringUtils
-    ) {
-        this.allowedEntries = allowedEntries;
-        this.stringUtils = stringUtils;
-    }
-
-    /**
      * Verifica si una secuencia de ADN pertenece a un humano mutante o a un humano no-mutante.
      *
      * @param dna Secuencia de ADN a verificar. Es un array de String, donde cada String representa una fila de una tabla NxN.
      * @return true si la secuencia de ADN pertenece a un humano mutante, false si pertenece a un humano no-mutante.
      */
+    @Cacheable("results")
     public boolean isMutant(String[] dna) {
         validate(dna);
         // Inicializamos el contador de secuencias de 4 letras
@@ -91,13 +75,13 @@ public class ADNCheckService {
      *
      * @param dna
      */
-    public void validate(final @MatrixEntriesConstraint @SquareMatrixConstraint String[] dna) {
+    public void validate(final String[] dna) {
         final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        final Set<ConstraintViolation<String[]>> validationResult = validator.validate(dna);
+        final Set<ConstraintViolation<DNADTO>> validationResult = validator.validate(new DNADTO(dna));
         if (!validationResult.isEmpty()) {
             throw new ValidationException("La representación del ADN no es válida: " +
                     validationResult.stream()
-                            .map(violation -> violation.getMessage())
+                            .map(ConstraintViolation::getMessage)
                             .collect(Collectors.joining(". "))
             );
         }

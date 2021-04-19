@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mutantes</a> &gt; <a href="index.source.html" class="el_package">uy.com.minza.mutantes.error.handler</a> &gt; <span class="el_source">RestExceptionHandler.java</span></div><h1>RestExceptionHandler.java</h1><pre class="source lang-java linenums">package uy.com.minza.mutantes.error.handler;
+
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.springframework.beans.TypeMismatchException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import uy.com.minza.mutantes.error.dto.APIError;
+import uy.com.minza.mutantes.error.dto.APIErrorItem;
+import uy.com.minza.mutantes.error.exception.ValidationException;
+
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
+
+/**
+ * Handler de excepciones
+ */
+@RestControllerAdvice
+<span class="fc" id="L30">public class RestExceptionHandler {</span>
+
+    protected ResponseEntity&lt;?&gt; buildResponseEntity(APIError apiError) {
+<span class="fc" id="L33">        return new ResponseEntity(apiError, HttpStatus.valueOf(apiError.getStatus()));</span>
+    }
+
+    @ExceptionHandler({Throwable.class})
+    public ResponseEntity&lt;?&gt; unexpectedError(Throwable exs) {
+<span class="fc" id="L38">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L39">                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())</span>
+<span class="fc" id="L40">                .message(&quot;Ocurrió un error inesperado.&quot;)</span>
+<span class="fc" id="L41">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L42">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L43">                .build());</span>
+    }
+
+    @ExceptionHandler({ValidationException.class})
+    public ResponseEntity&lt;?&gt; validation(ValidationException exs) {
+<span class="fc" id="L48">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L49">                .status(HttpStatus.BAD_REQUEST.value())</span>
+<span class="fc" id="L50">                .message(&quot;Los datos ingresados no son correctos.&quot;)</span>
+<span class="fc" id="L51">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L52">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L53">                .build());</span>
+    }
+
+    @ExceptionHandler({InvalidFormatException.class})
+    public ResponseEntity&lt;?&gt; invalidFormat(InvalidFormatException exs) {
+<span class="fc" id="L58">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L59">                .status(HttpStatus.BAD_REQUEST.value())</span>
+<span class="fc" id="L60">                .message(&quot;La petición está mal formada.&quot;)</span>
+<span class="fc" id="L61">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L62">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L63">                .build());</span>
+    }
+
+    @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
+    public ResponseEntity&lt;?&gt; handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException exs) {
+<span class="fc" id="L68">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L69">                .status(HttpStatus.METHOD_NOT_ALLOWED.value())</span>
+<span class="fc" id="L70">                .message(&quot;El método no está soportado.&quot;)</span>
+<span class="fc" id="L71">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L72">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L73">                .build());</span>
+    }
+
+    @ExceptionHandler({HttpMediaTypeNotSupportedException.class})
+    public ResponseEntity&lt;?&gt; handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException exs) {
+<span class="fc" id="L78">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L79">                .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())</span>
+<span class="fc" id="L80">                .message(&quot;El mimetype no está soportado.&quot;)</span>
+<span class="fc" id="L81">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L82">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L83">                .build());</span>
+    }
+
+    @ExceptionHandler({HttpMediaTypeNotAcceptableException.class})
+    public ResponseEntity&lt;?&gt; handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException exs) {
+<span class="fc" id="L88">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L89">                .status(HttpStatus.NOT_ACCEPTABLE.value())</span>
+<span class="fc" id="L90">                .message(&quot;El mimetype no está aceptado.&quot;)</span>
+<span class="fc" id="L91">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L92">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L93">                .build());</span>
+    }
+
+    @ExceptionHandler({MissingPathVariableException.class})
+    public ResponseEntity&lt;?&gt; handleMissingPathVariable(MissingPathVariableException exs) {
+<span class="fc" id="L98">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L99">                .status(HttpStatus.BAD_REQUEST.value())</span>
+<span class="fc" id="L100">                .message(&quot;Al menos alguna variable en la ruta no fue ingresada.&quot;)</span>
+<span class="fc" id="L101">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L102">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L103">                .build());</span>
+    }
+
+    @ExceptionHandler({TypeMismatchException.class})
+    public ResponseEntity&lt;?&gt; handleTypeMismatch(TypeMismatchException exs) {
+<span class="fc" id="L108">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L109">                .status(HttpStatus.BAD_REQUEST.value())</span>
+<span class="fc" id="L110">                .message(&quot;El tipo de datos no concuerda.&quot;)</span>
+<span class="fc" id="L111">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L112">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L113">                .build());</span>
+    }
+
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ResponseEntity&lt;?&gt; handleMethodArgumentNotValid(MethodArgumentNotValidException exs) {
+<span class="fc" id="L118">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L119">                .status(HttpStatus.BAD_REQUEST.value())</span>
+<span class="fc" id="L120">                .message(&quot;La petición está mal formada.&quot;)</span>
+<span class="fc" id="L121">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L122">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L123">                .build());</span>
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    public ResponseEntity&lt;?&gt; handleHttpMessageNotReadable(HttpMessageNotReadableException exs) {
+<span class="fc" id="L128">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L129">                .status(HttpStatus.BAD_REQUEST.value())</span>
+<span class="fc" id="L130">                .message(&quot;La petición está mal formada.&quot;)</span>
+<span class="fc" id="L131">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L132">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L133">                .build());</span>
+    }
+
+    @ExceptionHandler({MissingServletRequestParameterException.class})
+    public ResponseEntity&lt;?&gt; handleMissingServletRequestParameter(MissingServletRequestParameterException exs) {
+<span class="fc" id="L138">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L139">                .status(HttpStatus.BAD_REQUEST.value())</span>
+<span class="fc" id="L140">                .message(&quot;La petición está mal formada.&quot;)</span>
+<span class="fc" id="L141">                .debugMessage(String.format(&quot;El campo %s es requerido pero no fue enviado en la petición&quot;, exs.getParameterName()))</span>
+<span class="fc" id="L142">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L143">                .build());</span>
+    }
+
+    @ExceptionHandler({BindException.class})
+    public ResponseEntity&lt;?&gt; handleBindException(BindException exs) {
+<span class="fc" id="L148">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L149">                .status(HttpStatus.BAD_REQUEST.value())</span>
+<span class="fc" id="L150">                .message(&quot;La petición está mal formada.&quot;)</span>
+<span class="fc" id="L151">                .debugMessage(String.format(&quot;Se encontraron %s errores de validación&quot;, exs.getErrorCount()))</span>
+<span class="fc" id="L152">                .subErrors(exs.getAllErrors().stream()</span>
+<span class="pc" id="L153">                        .map(e -&gt; APIErrorItem.builder()</span>
+<span class="nc" id="L154">                                .message(e.getDefaultMessage())</span>
+<span class="nc" id="L155">                                .debugMessage(String.format(&quot;Error encontrado con el objeto %s&quot;, e.getObjectName()))</span>
+<span class="nc" id="L156">                                .build())</span>
+<span class="fc" id="L157">                        .collect(Collectors.toList())</span>
+                )
+<span class="fc" id="L159">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L160">                .build());</span>
+    }
+
+    @ExceptionHandler({ServletRequestBindingException.class})
+    public ResponseEntity&lt;?&gt; handleServletRequestBindingException(ServletRequestBindingException exs) {
+<span class="fc" id="L165">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L166">                .status(HttpStatus.BAD_REQUEST.value())</span>
+<span class="fc" id="L167">                .message(&quot;La petición está mal formada.&quot;)</span>
+<span class="fc" id="L168">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L169">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L170">                .build());</span>
+    }
+
+    @ExceptionHandler({NoHandlerFoundException.class})
+    public ResponseEntity&lt;?&gt; handleNoHandlerFoundException(NoHandlerFoundException exs) {
+<span class="fc" id="L175">        return this.buildResponseEntity(APIError.builder()</span>
+<span class="fc" id="L176">                .status(HttpStatus.NOT_FOUND.value())</span>
+<span class="fc" id="L177">                .message(&quot;Recurso no encontrado.&quot;)</span>
+<span class="fc" id="L178">                .debugMessage(exs.getMessage())</span>
+<span class="fc" id="L179">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L180">                .build());</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

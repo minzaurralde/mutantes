@@ -8,10 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.context.ApplicationContext;
+import uy.com.minza.mutantes.MutantsApplication;
 import uy.com.minza.mutantes.error.exception.ValidationException;
 import uy.com.minza.mutantes.utils.StringUtils;
 
@@ -21,10 +24,10 @@ import java.util.stream.Stream;
 
 import static uy.com.minza.mutantes.test.DNAExamples.*;
 
-@ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@EnableAutoConfiguration
+@AutoConfigureMockMvc
 public class ADNCheckServiceTest {
 
     @Mock
@@ -32,20 +35,44 @@ public class ADNCheckServiceTest {
     @Autowired
     @InjectMocks
     private ADNCheckService adnCheckService;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @BeforeAll
     public void setup() {
+        MockitoAnnotations.openMocks(this);
+        MutantsApplication.init(this.applicationContext);
+        Mockito.clearInvocations(this.stringUtils);
         Stream.concat(Stream.concat(Arrays.stream(DNA_OK_1), Arrays.stream(DNA_OK_2)), Stream.concat(Arrays.stream(DNA_NOT_OK_1), Arrays.stream(DNA_INVALID_COL_LEN)))
+                .filter(s -> s
+                        .replaceAll("A", "")
+                        .replaceAll("T", "")
+                        .replaceAll("C", "")
+                        .replaceAll("G", "")
+                        .length() == 0
+                )
                 .collect(Collectors.toSet())
                 .forEach(row -> Mockito
                         .when(this.stringUtils.containsOnly(Mockito.eq(row), Mockito.any(char[].class)))
                         .thenReturn(true));
-        Mockito.when(this.stringUtils.containsOnly(Mockito.eq("TT5TGT"), Mockito.any(char[].class)))
-                .thenReturn(true);
+        Stream.concat(Stream.concat(Arrays.stream(DNA_OK_1), Arrays.stream(DNA_OK_2)), Stream.concat(Arrays.stream(DNA_NOT_OK_1), Arrays.stream(DNA_INVALID_COL_LEN)))
+                .filter(s -> s
+                        .replaceAll("A", "")
+                        .replaceAll("T", "")
+                        .replaceAll("C", "")
+                        .replaceAll("G", "")
+                        .length() > 0
+                )
+                .collect(Collectors.toSet())
+                .forEach(row -> Mockito
+                        .when(this.stringUtils.containsOnly(Mockito.eq(row), Mockito.any(char[].class)))
+                        .thenReturn(false));
+/*        Mockito.when(this.stringUtils.containsOnly(Mockito.eq("TT5TGT"), Mockito.any(char[].class)))
+                .thenReturn(false);
         Mockito.when(this.stringUtils.containsOnly(Mockito.eq("TTaTGT"), Mockito.any(char[].class)))
-                .thenReturn(true);
+                .thenReturn(false);
         Mockito.when(this.stringUtils.containsOnly(Mockito.eq("TTZTGT"), Mockito.any(char[].class)))
-                .thenReturn(true);
+                .thenReturn(false);*/
     }
 
     //region isMutant

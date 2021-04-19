@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StringUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mutantes</a> &gt; <a href="index.source.html" class="el_package">uy.com.minza.mutantes.utils</a> &gt; <span class="el_source">StringUtils.java</span></div><h1>StringUtils.java</h1><pre class="source lang-java linenums">package uy.com.minza.mutantes.utils;
+
+import org.springframework.stereotype.Component;
+
+/**
+ * Utilidades para trabajar con Strings
+ */
+@Component(&quot;stringUtils&quot;)
+<span class="fc" id="L9">public class StringUtils {</span>
+
+    /**
+     * Verifica que un string solamente contenga ciertos caracteres
+     *
+     * @param input String que se quiere verificar
+     * @param chars Conjunto de caracteres permitidos
+     * @return true si el String de entrada solamente contiene caracteres dentro del conjunto de caracteres permitidos
+     */
+    public boolean containsOnly(String input, char... chars) {
+<span class="pc bpc" id="L19" title="1 of 2 branches missed.">        if (chars == null) {</span>
+<span class="nc" id="L20">            return false;</span>
+        } else {
+<span class="fc bfc" id="L22" title="All 2 branches covered.">            for (char aChar : chars) {</span>
+<span class="fc" id="L23">                input = input.replaceAll(String.valueOf(aChar), &quot;&quot;);</span>
+            }
+<span class="fc" id="L25">            return &quot;&quot;.equals(input);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

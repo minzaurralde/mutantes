@@ -10,24 +10,23 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@SpringBootApplication(
-        scanBasePackages = {"uy.com.minza.mutantes"}
-)
+@SpringBootApplication(scanBasePackages = {"uy.com.minza.mutantes"})
 @EnableScheduling
 @EnableAsync
 @EnableSwagger2
 public class MutantsApplication {
     @Getter
-    private static MutantsApplication instance = null;
-    @Setter(value = AccessLevel.PRIVATE)
+    private static MutantsApplication instance = new MutantsApplication();
+    @Setter(value = AccessLevel.PACKAGE)
     private ApplicationContext applicationContext = null;
 
     public static void main(String[] args) {
         final ApplicationContext applicationContext = SpringApplication.run(MutantsApplication.class, args);
-        if (instance == null) {
-            instance = new MutantsApplication();
-        }
         instance.setApplicationContext(applicationContext);
+    }
+
+    public static void init(final ApplicationContext applicationContext) {
+        getInstance().setApplicationContext(applicationContext);
     }
 
     public <T> T getBean(Class<T> beanClass) {

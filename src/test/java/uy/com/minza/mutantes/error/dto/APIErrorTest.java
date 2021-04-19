@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -18,6 +19,10 @@ public class APIErrorTest {
 
     private APIError dto1;
     private APIError dto2;
+    private APIError dto3;
+    private APIError dto4;
+    private APIError dto5;
+    private APIError dto6;
     private APIError otherDto;
     private LocalDateTime now;
 
@@ -26,12 +31,21 @@ public class APIErrorTest {
         this.now = LocalDateTime.now();
         this.dto1 = new APIError(200, this.now, "message1", "debugMessage1", null);
         this.dto2 = new APIError(500, LocalDateTime.now(), "message2", "debugMessage2", null);
+        this.dto3 = new APIError(200, LocalDateTime.now().minus(5, ChronoUnit.MINUTES), "message1", "debugMessage1", null);
+        this.dto4 = new APIError(200, this.now, "message2", "debugMessage1", null);
+        this.dto5 = new APIError(200, this.now, "message1", "debugMessage2", null);
+        this.dto6 = new APIError(200, this.now, "message1", "debugMessage1", Collections.singletonList(APIErrorItem.builder().message("submessage1").build()));
         this.otherDto = new APIError(200, this.now, "message1", "debugMessage1", null);
     }
 
     @Test
     public void builder() {
         Assertions.assertEquals(this.dto1, APIError.builder().status(200).timestamp(this.now).message("message1").debugMessage("debugMessage1").subErrors(null).build());
+    }
+
+    @Test
+    public void builderToString() {
+        Assertions.assertNotNull(APIError.builder().toString());
     }
 
     @Test
@@ -110,15 +124,34 @@ public class APIErrorTest {
     }
 
     @Test
-    public void equalsDiffObjectSameDna() {
+    public void equalsDiffObjectSameFields() {
         Assertions.assertTrue(this.dto1.equals(this.otherDto));
     }
 
     @Test
-    public void equalsDiffObjectDiffDna() {
-        Assertions.assertTrue(this.dto1.canEqual(this.dto1));
+    public void equalsDiffObjectDiffFields1() {
+        Assertions.assertFalse(this.dto1.equals(this.dto2));
     }
 
+    @Test
+    public void equalsDiffObjectDiffFields2() {
+        Assertions.assertFalse(this.dto1.equals(this.dto3));
+    }
+
+    @Test
+    public void equalsDiffObjectDiffFields3() {
+        Assertions.assertFalse(this.dto1.equals(this.dto4));
+    }
+
+    @Test
+    public void equalsDiffObjectDiffFields4() {
+        Assertions.assertFalse(this.dto1.equals(this.dto5));
+    }
+
+    @Test
+    public void equalsDiffObjectDiffFields5() {
+        Assertions.assertFalse(this.dto1.equals(this.dto6));
+    }
 
     @Test
     public void canEqualTest() {
@@ -136,7 +169,8 @@ public class APIErrorTest {
     }
 
     @Test
-    public void toStringNotEqualsTest() {
+    public void toStringNotEquals1Test() {
         Assertions.assertNotEquals(this.dto1.toString(), this.dto2);
     }
+
 }

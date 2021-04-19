@@ -29,6 +29,11 @@ public class APIErrorItemTest {
     }
 
     @Test
+    public void builderToString() {
+        Assertions.assertNotNull(APIErrorItem.builder().toString());
+    }
+
+    @Test
     public void getMessage() {
         final APIErrorItem dtoLocal = new APIErrorItem();
         ReflectionTestUtils.setField(dtoLocal, "message", "message1");
@@ -62,12 +67,12 @@ public class APIErrorItemTest {
     }
 
     @Test
-    public void equalsDiffObjectSameDna() {
+    public void equalsDiffObjectSameFields() {
         Assertions.assertTrue(this.dto1.equals(this.otherDto));
     }
 
     @Test
-    public void equalsDiffObjectDiffDna() {
+    public void equalsDiffObjectDiffFields() {
         Assertions.assertTrue(this.dto1.canEqual(this.dto1));
     }
 

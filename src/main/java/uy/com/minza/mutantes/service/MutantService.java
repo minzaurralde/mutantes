@@ -17,30 +17,22 @@ public class MutantService {
     private final ADNCheckService adnCheckService;
 
     /**
-     * Servicio que mantiene las estadísticas.
+     * Servicio que realiza la validación del ADN.
      */
-    private final StatsService statsService;
-
-    /**
-     * Servicio que mantiene el histórico de ADN revisado.
-     */
-    private final HistoricADNService historicADNService;
+    private final UpdaterService updaterService;
 
     /**
      * Crea una nueva instancia del servicio.
      *
-     * @param adnCheckService    Servicio que valida el ADN.
-     * @param statsService       Servicio de estadísticas.
-     * @param historicADNService Servicio de almacenamiento de histórico de ADN.
+     * @param adnCheckService Servicio que valida el ADN.
+     * @param updaterService  Servicio de actualizacion.
      */
     public MutantService(
             @Autowired ADNCheckService adnCheckService,
-            @Autowired StatsService statsService,
-            @Autowired HistoricADNService historicADNService
+            @Autowired UpdaterService updaterService
     ) {
         this.adnCheckService = adnCheckService;
-        this.statsService = statsService;
-        this.historicADNService = historicADNService;
+        this.updaterService = updaterService;
     }
 
     /**
@@ -53,8 +45,7 @@ public class MutantService {
             final String[] dna
     ) {
         final boolean result = this.adnCheckService.isMutant(dna);
-        this.statsService.updateStats(result);
-        this.historicADNService.save(dna, result);
+        this.updaterService.update(dna, result);
         return result;
     }
 

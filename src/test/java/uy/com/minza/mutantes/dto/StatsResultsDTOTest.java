@@ -29,6 +29,11 @@ public class StatsResultsDTOTest {
     }
 
     @Test
+    public void builderToString() {
+        Assertions.assertNotNull(StatsResultsDTO.builder().toString());
+    }
+
+    @Test
     public void getCountMutantDNA() {
         final StatsResultsDTO dtoLocal = new StatsResultsDTO();
         ReflectionTestUtils.setField(dtoLocal, "countMutantDNA", 10);
@@ -76,15 +81,14 @@ public class StatsResultsDTOTest {
     }
 
     @Test
-    public void equalsDiffObjectSameDna() {
+    public void equalsDiffObjectSameFields() {
         Assertions.assertTrue(this.dto1.equals(this.otherDto));
     }
 
     @Test
-    public void equalsDiffObjectDiffDna() {
+    public void equalsDiffObjectDiffFields() {
         Assertions.assertTrue(this.dto1.canEqual(this.dto1));
     }
-
 
     @Test
     public void canEqualTest() {

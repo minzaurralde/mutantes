@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MutantController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mutantes</a> &gt; <a href="index.source.html" class="el_package">uy.com.minza.mutantes.controller</a> &gt; <span class="el_source">MutantController.java</span></div><h1>MutantController.java</h1><pre class="source lang-java linenums">package uy.com.minza.mutantes.controller;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import uy.com.minza.mutantes.dto.DNADTO;
+import uy.com.minza.mutantes.error.dto.APIError;
+import uy.com.minza.mutantes.service.MutantService;
+
+import javax.validation.Valid;
+
+/**
+ * Controller de la API REST de mutantes
+ */
+@Api(value = &quot;Mutants&quot;, tags = {&quot;mutantes&quot;})
+@RestController
+public class MutantController {
+
+    private MutantService mutantService;
+
+    public MutantController(
+            @Autowired MutantService mutantService
+<span class="fc" id="L30">    ) {</span>
+<span class="fc" id="L31">        this.mutantService = mutantService;</span>
+<span class="fc" id="L32">    }</span>
+
+    @ApiOperation(
+            value = &quot;Valida si una secuencia de ADN pertence a un humano mutante o a uno no mutante.&quot;,
+            notes = &quot;**Descripción** \n&quot; +
+                    &quot;Dada una secuencia de ADN en formato de array de String que representa una matriz de NxN cuyas entradas pueden tener alguno de los caracteres A, T, C, G.\n&quot; +
+                    &quot;**Precondiciones**\n&quot; +
+                    &quot;Ninguna\n&quot;
+            ,
+            response = Void.class,
+            tags = &quot;mutantes&quot;
+    )
+    @ApiResponses({
+            @ApiResponse(code = 200, message = &quot;El ADN pertence a un humano mutante&quot;, response = Void.class),
+            @ApiResponse(code = 400, message = &quot;El ADN ingresado no es válido&quot;, response = APIError.class),
+            @ApiResponse(code = 403, message = &quot;El ADN pertence a un humano no mutante&quot;, response = Void.class),
+            @ApiResponse(code = 500, message = &quot;Ocurrio un error al procesar la solicitud&quot;, response = APIError.class)
+    })
+    @RequestMapping(
+            value = &quot;/mutant&quot;,
+            method = RequestMethod.POST,
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @ResponseBody
+    public ResponseEntity&lt;Void&gt; isMutant(
+            @Valid @RequestBody DNADTO dna, final BindingResult dnaBindingResult
+    ) {
+<span class="fc" id="L60">        boolean isMutant = mutantService.isMutant(dna.getDna());</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (isMutant) {</span>
+<span class="fc" id="L62">            return new ResponseEntity&lt;&gt;(null, HttpStatus.OK);</span>
+        } else {
+<span class="fc" id="L64">            return new ResponseEntity&lt;&gt;(null, HttpStatus.FORBIDDEN);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

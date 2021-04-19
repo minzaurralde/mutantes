@@ -1,6 +1,5 @@
 package uy.com.minza.mutantes.utils.validation;
 
-import lombok.Getter;
 import uy.com.minza.mutantes.MutantsApplication;
 import uy.com.minza.mutantes.utils.StringUtils;
 
@@ -10,18 +9,20 @@ import java.util.Arrays;
 
 public class MatrixEntriesValidator implements ConstraintValidator<MatrixEntriesConstraint, String[]> {
 
-    @Getter
-    private char[] allowedEntries;
-    private StringUtils stringUtils;
+    char[] allowedEntries;
+    StringUtils stringUtils;
 
     @Override
     public void initialize(MatrixEntriesConstraint constraintAnnotation) {
         this.allowedEntries = constraintAnnotation.allowedEntries();
         this.stringUtils = MutantsApplication.getInstance().getBean(StringUtils.class);
+        if (this.stringUtils == null) {
+            this.stringUtils = new StringUtils();
+        }
     }
 
     @Override
     public boolean isValid(String[] value, ConstraintValidatorContext context) {
-        return Arrays.stream(value).anyMatch(row -> !this.stringUtils.containsOnly(row, this.allowedEntries));
+        return Arrays.stream(value).allMatch(row -> this.stringUtils.containsOnly(row, this.allowedEntries));
     }
 }

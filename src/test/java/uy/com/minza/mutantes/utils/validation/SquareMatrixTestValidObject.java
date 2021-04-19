@@ -6,7 +6,7 @@ public class SquareMatrixTestValidObject {
 
     @Getter
     @SquareMatrixConstraint
-    private String[] dna = {"AB", "BA"};
+    String[] dna = {"AB", "BA"};
 
     public SquareMatrixTestValidObject() {
     }

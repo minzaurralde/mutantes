@@ -8,32 +8,32 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import uy.com.minza.mutantes.error.exception.ValidationException;
 
 import static uy.com.minza.mutantes.test.DNAExamples.*;
 
-@ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
+@EnableAutoConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MutantServiceTest {
 
     @Mock
     private ADNCheckService adnCheckService;
     @Mock
-    private StatsService statsService;
-    @Mock
-    private HistoricADNService historicADNService;
+    private UpdaterService updaterService;
     @Autowired
     @InjectMocks
     private MutantService mutantService;
 
     @BeforeAll
     public void setup() {
+        MockitoAnnotations.openMocks(this);
+        Mockito.clearInvocations(this.updaterService, this.adnCheckService);
+
         Mockito.when(this.adnCheckService.isMutant(Mockito.eq(DNA_OK_1)))
                 .thenReturn(true);
         Mockito.when(this.adnCheckService.isMutant(Mockito.eq(DNA_OK_2)))
@@ -41,15 +41,15 @@ public class MutantServiceTest {
         Mockito.when(this.adnCheckService.isMutant(Mockito.eq(DNA_NOT_OK_1)))
                 .thenReturn(false);
         Mockito.when(this.adnCheckService.isMutant(Mockito.eq(DNA_INVALID_COL_LEN)))
-                .thenReturn(false);
+                .thenThrow(ValidationException.class);
         Mockito.when(this.adnCheckService.isMutant(Mockito.eq(DNA_INVALID_ROW_LEN)))
-                .thenReturn(false);
+                .thenThrow(ValidationException.class);
         Mockito.when(this.adnCheckService.isMutant(Mockito.eq(DNA_INVALID_CHAR_ENTRY)))
-                .thenReturn(false);
+                .thenThrow(ValidationException.class);
         Mockito.when(this.adnCheckService.isMutant(Mockito.eq(DNA_LOWERCASE_ENTRY)))
-                .thenReturn(false);
+                .thenThrow(ValidationException.class);
         Mockito.when(this.adnCheckService.isMutant(Mockito.eq(DNA_NUMERIC_ENTRY)))
-                .thenReturn(false);
+                .thenThrow(ValidationException.class);
     }
 
     @Test

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>APIErrorItem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mutantes</a> &gt; <a href="index.source.html" class="el_package">uy.com.minza.mutantes.error.dto</a> &gt; <span class="el_source">APIErrorItem.java</span></div><h1>APIErrorItem.java</h1><pre class="source lang-java linenums">package uy.com.minza.mutantes.error.dto;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * Información de un error detallado
+ *
+ * @author Martin Inzaurralde - eminzaurralde@gmail.com
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@ApiModel(
+        description = &quot;Información asociada a un error particular de la respuesta en el caso de que ocurra más de un problema con la ejecución.&quot;
+)
+<span class="pc bpc" id="L23" title="10 of 22 branches missed.">@Data</span>
+<span class="fc" id="L24">@Builder</span>
+<span class="fc" id="L25">@NoArgsConstructor</span>
+<span class="fc" id="L26">@AllArgsConstructor</span>
+public class APIErrorItem {
+
+    /**
+     * Mensaje del error
+     */
+    @JsonProperty(&quot;message&quot;)
+    @ApiModelProperty(
+            value = &quot;Mensaje asociado al error.&quot;,
+            name = &quot;message&quot;,
+            required = true
+    )
+<span class="fc" id="L38">    private String message;</span>
+
+    /**
+     * Mensaje detallado del error
+     */
+    @JsonProperty(&quot;debugMessage&quot;)
+    @ApiModelProperty(
+            value = &quot;Mensaje detallado del error.&quot;,
+            name = &quot;debugMessage&quot;,
+            required = false
+    )
+<span class="fc" id="L49">    private String debugMessage;</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

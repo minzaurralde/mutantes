@@ -44,12 +44,12 @@ public class DNADTOTest {
     }
 
     @Test
-    public void equalsDiffObjectSameDna() {
+    public void equalsDiffObjectSameFields() {
         Assertions.assertTrue(this.dto1.equals(this.otherDto));
     }
 
     @Test
-    public void equalsDiffObjectDiffDna() {
+    public void equalsDiffObjectDiffFields() {
         Assertions.assertFalse(this.dto1.equals(this.dto2));
     }
 

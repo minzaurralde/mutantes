@@ -5,8 +5,8 @@ import lombok.Getter;
 public class MatrixEntriesTestInvalidObject {
 
     @Getter
-    @MatrixEntriesConstraint(allowedEntries = {'A', 'B', 'C'})
-    private String[] dna = {"AB", "BC"};
+    @MatrixEntriesConstraint(allowedEntries = {'A', 'B'})
+    String[] dna = {"AB", "BC"};
 
     public MatrixEntriesTestInvalidObject() {
     }

@@ -7,17 +7,34 @@ import uy.com.minza.mutantes.dto.StatsResultsDTO;
 @Service
 public class StatsService {
 
-    @Async("statsExecutor")
-    public void updateStats(boolean result) {
-        // TODO updateStats
+    static int HUMANS = 0;
+    static int MUTANTS = 0;
+
+    private static synchronized void addResult(boolean result) {
+        if (result) {
+            MUTANTS++;
+        } else {
+            HUMANS++;
+        }
     }
 
-    public StatsResultsDTO getStats() {
-        // TODO getStatus
+    @Async("statsExecutor")
+    public void updateStats(boolean result) {
+        addResult(result);
+    }
+
+    public final StatsResultsDTO getStats() {
+        int humans = 0;
+        int mutants = 0;
+        synchronized (this) {
+            humans = HUMANS;
+            mutants = MUTANTS;
+        }
+        float ratio = humans + mutants == 0 ? 0f : (float) mutants / ((float) humans + (float) mutants);
         return StatsResultsDTO.builder()
-                .countMutantDNA(0)
-                .countHumanDNA(0)
-                .ratio(0)
+                .countMutantDNA(MUTANTS)
+                .countHumanDNA(HUMANS)
+                .ratio(ratio)
                 .build();
     }
 }

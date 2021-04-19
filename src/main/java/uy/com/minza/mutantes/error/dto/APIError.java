@@ -6,10 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,7 +22,10 @@ import java.util.List;
 @ApiModel(
         description = "Información retornada en caso de error."
 )
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SwaggerConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mutantes</a> &gt; <a href="index.source.html" class="el_package">uy.com.minza.mutantes.config</a> &gt; <span class="el_source">SwaggerConfig.java</span></div><h1>SwaggerConfig.java</h1><pre class="source lang-java linenums">package uy.com.minza.mutantes.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import uy.com.minza.mutantes.MutantsApplication;
+
+import javax.servlet.ServletContext;
+import java.util.ArrayList;
+
+import static springfox.documentation.builders.RequestHandlerSelectors.basePackage;
+
+/**
+ * Configuración de Swagger UI.
+ *
+ * @author Martin Inzaurralde - eminzaurralde@gmail.com
+ */
+@Configuration
+public class SwaggerConfig {
+
+    /**
+     * Build Properties del proyecto.
+     */
+    private BuildProperties buildProperties;
+
+    /**
+     * Crea una nueva instancia.
+     *
+     * @param buildProperties Build properties que se va a utilizar.
+     */
+    public SwaggerConfig(
+            @Autowired BuildProperties buildProperties
+<span class="fc" id="L38">    ) {</span>
+<span class="fc" id="L39">        this.buildProperties = buildProperties;</span>
+<span class="fc" id="L40">    }</span>
+
+    /**
+     * Genera el docklet con la descripción de la API.
+     *
+     * @param servletContext ServletContext.
+     * @return El docklet con la información de la API para Swagger.
+     */
+    @Bean
+    public Docket api(final ServletContext servletContext) {
+<span class="fc" id="L50">        return new Docket(DocumentationType.SWAGGER_2)</span>
+<span class="fc" id="L51">                .select()</span>
+<span class="fc" id="L52">                .apis(basePackage(MutantsApplication.class.getPackage().getName()))</span>
+<span class="fc" id="L53">                .build()</span>
+<span class="fc" id="L54">                .apiInfo(metadata())</span>
+<span class="fc" id="L55">                .useDefaultResponseMessages(false);</span>
+    }
+
+    /**
+     * Obtiene la metadata de la API.
+     *
+     * @return Un objeto ApiInfo con la metatada de la API.
+     */
+    private ApiInfo metadata() {
+<span class="fc" id="L64">        return new ApiInfo(</span>
+                &quot;Mutant API&quot;,
+                &quot;API REST para la revisión de ADNs de humanos mutantes&quot;,
+<span class="fc" id="L67">                buildProperties.getVersion(),</span>
+                &quot;&quot;,
+                new Contact(&quot;&quot;, &quot;&quot;, &quot;&quot;),
+                &quot;&quot;,
+                &quot;&quot;,
+                new ArrayList&lt;&gt;());
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
