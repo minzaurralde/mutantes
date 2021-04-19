@@ -1,0 +1,7 @@
+runtime: java11
+instance_class: F1
+service: mutantes
+entrypoint: java -Xmx64m -jar mutantes.jar
+automatic_scaling:
+  min_instances: 1
+  max_instances: 4

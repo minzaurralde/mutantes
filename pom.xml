@@ -21,7 +21,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
 
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <release-plugin.version>2.5.3</release-plugin.version>
@@ -31,10 +31,11 @@
         <jacoco-plugin.version>0.8.6</jacoco-plugin.version>
         <site-plugin.version>3.9.1</site-plugin.version>
         <project-info-reports-plugin.version>3.1.1</project-info-reports-plugin.version>
+        <appengine-plugin.version>2.4.0</appengine-plugin.version>
 
         <swagger.version>3.0.0</swagger.version>
-
         <validation-api.version>2.0.1.Final</validation-api.version>
+        <cucumber.version>6.8.0</cucumber.version>
 
         <start-class>uy.com.minza.mutantes.MutantsApplication</start-class>
         <mainClass>uy.com.minza.mutantes.MutantsApplication</mainClass>
@@ -95,7 +96,18 @@
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate-validator.version}</version>
         </dependency>
+        <!--
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -126,7 +138,26 @@
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <!--
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+    -->
     </dependencies>
 
     <build>
@@ -217,6 +248,31 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>uy.com.minza.mutantes.MutantsApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>${appengine-plugin.version}</version>
+                <configuration>
+                    <version>1</version>
+                    <projectId>pragmatic-braid-311213</projectId>
+                </configuration>
             </plugin>
         </plugins>
     </build>
