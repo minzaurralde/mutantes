@@ -3,23 +3,39 @@ package uy.com.minza.mutantes.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.convert.MongoConverter;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import uy.com.minza.mutantes.dto.DNADTO;
+import uy.com.minza.mutantes.repository.mongo.DNARepository;
 import uy.com.minza.mutantes.test.DNAExamples;
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class MutantControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @MockBean
+    private MongoConverter mongoConverter;
+    @MockBean
+    private DNARepository repository;
+    @MockBean
+    private MongoTemplate mongoTemplate;
+    @MockBean
+    private GridFsTemplate gridFsTemplate;
     @Autowired
     private ObjectMapper objectMapper;
 

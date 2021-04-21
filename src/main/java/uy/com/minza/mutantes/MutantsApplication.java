@@ -6,14 +6,8 @@ import lombok.Setter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication(scanBasePackages = {"uy.com.minza.mutantes"})
-@EnableScheduling
-@EnableAsync
-@EnableSwagger2
 public class MutantsApplication {
     @Getter
     private static MutantsApplication instance = new MutantsApplication();

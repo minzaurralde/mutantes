@@ -1,55 +1,46 @@
 package uy.com.minza.mutantes.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import uy.com.minza.mutantes.dto.DNADTO;
-import uy.com.minza.mutantes.test.DNAExamples;
+import org.springframework.http.ResponseEntity;
+import uy.com.minza.mutantes.dto.StatsResultsDTO;
+import uy.com.minza.mutantes.service.StatsService;
 
-@AutoConfigureMockMvc
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class StatsControllerTest {
 
+    @Mock
+    private StatsService statsService;
     @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
+    @InjectMocks
+    private StatsController statsController;
+
+    private StatsResultsDTO statsResultsDTO = StatsResultsDTO.builder().countHumanDNA(1).countMutantDNA(2).ratio(2 / 3).build();
+
+    @BeforeAll
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void getStatsOkTest() {
-        isMutant(new DNADTO(DNAExamples.DNA_OK_1));
-        isMutant(new DNADTO(DNAExamples.DNA_OK_2));
-        isMutant(new DNADTO(DNAExamples.DNA_NOT_OK_1));
-        getStats(2, 1);
-    }
-
-    @SneakyThrows
-    public void getStats(int expectedCountMutant, int expectedCountHuman) {
-        float expectedRatio = expectedCountHuman + expectedCountMutant == 0 ? 0f : (float) expectedCountMutant / (expectedCountHuman + expectedCountMutant);
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/stats")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.count_mutant_dna").value(expectedCountMutant))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.count_human_dna").value(expectedCountHuman))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.ratio").value(expectedRatio))
-                .andReturn();
-    }
-
-    @SneakyThrows
-    public void isMutant(DNADTO dna) {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/mutant")
-                .content(objectMapper.writeValueAsString(dna))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andReturn();
+        Mockito.clearInvocations(this.statsService);
+        Mockito.when(this.statsService.getStats())
+                .thenReturn(statsResultsDTO);
+        final ResponseEntity<StatsResultsDTO> result = this.statsController.getStats();
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(200, result.getStatusCodeValue()),
+                () -> Assertions.assertEquals(statsResultsDTO, result.getBody())
+        );
     }
 }

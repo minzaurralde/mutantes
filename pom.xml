@@ -37,8 +37,9 @@
         <validation-api.version>2.0.1.Final</validation-api.version>
         <cucumber.version>6.8.0</cucumber.version>
 
+        <memcached-springboot.version>2.4.1</memcached-springboot.version>
+
         <start-class>uy.com.minza.mutantes.MutantsApplication</start-class>
-        <mainClass>uy.com.minza.mutantes.MutantsApplication</mainClass>
     </properties>
 
     <dependencies>
@@ -96,6 +97,12 @@
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate-validator.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.sixhours</groupId>
+            <artifactId>memcached-spring-boot-starter</artifactId>
+            <version>${memcached-springboot.version}</version>
+        </dependency>
         <!--
 
         <dependency>
@@ -138,6 +145,11 @@
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!--
         <dependency>
             <groupId>io.cucumber</groupId>
@@ -162,12 +174,19 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <executable>true</executable>
+                    <profiles>docker</profiles>
                 </configuration>
                 <executions>
                     <execution>
@@ -250,17 +269,13 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>uy.com.minza.mutantes.MutantsApplication</mainClass>
+                            <mainClass>${start-class}</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -303,5 +318,35 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <profiles>
+        <profile>
+            <id>cloud</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>cloud</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>local</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>docker</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>docker</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

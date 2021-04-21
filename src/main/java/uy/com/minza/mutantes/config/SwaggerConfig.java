@@ -8,6 +8,7 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import uy.com.minza.mutantes.MutantsApplication;
 
 import javax.servlet.ServletContext;
@@ -21,6 +22,7 @@ import static springfox.documentation.builders.RequestHandlerSelectors.basePacka
  * @author Martin Inzaurralde - eminzaurralde@gmail.com
  */
 @Configuration
+@EnableSwagger2
 public class SwaggerConfig {
 
     /**

@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+  mutantes:
+    image: mutantes:latest
+    environment:
+      - "MEMCACHED_CACHE_PROVIDER=static"
+      - "MEMCACHED_CACHE_SERVERS=memcached:11211"
+      - "SPRING_DATA_MONGODB_URI=mongodb://root:example@mongo:27017/mutantes"
+    ports:
+      - 8080
+      - 9001
+
+  memcached:
+    image: memcached:1.6-alpine
+    ports:
+      - "11211:11211"
+
+  mongo:
+    image: mongo:4.4
+    environment:
+      - "MONGO_INITDB_ROOT_USERNAME=root"
+      - "MONGO_INITDB_ROOT_PASSWORD=example"
+    ports:
+      - "27017:27017"
