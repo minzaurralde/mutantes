@@ -6,34 +6,28 @@ import lombok.Setter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication(scanBasePackages = {&quot;uy.com.minza.mutantes&quot;})
-@EnableScheduling
-@EnableAsync
-@EnableSwagger2
-<span class="fc" id="L17">public class MutantsApplication {</span>
-<span class="fc" id="L18">    @Getter</span>
-<span class="fc" id="L19">    private static MutantsApplication instance = new MutantsApplication();</span>
-<span class="fc" id="L20">    @Setter(value = AccessLevel.PACKAGE)</span>
+<span class="fc" id="L11">public class MutantsApplication {</span>
+<span class="fc" id="L12">    @Getter</span>
+<span class="fc" id="L13">    private static MutantsApplication instance = new MutantsApplication();</span>
+<span class="fc" id="L14">    @Setter(value = AccessLevel.PACKAGE)</span>
     private ApplicationContext applicationContext = null;
 
     public static void main(String[] args) {
-<span class="nc" id="L24">        final ApplicationContext applicationContext = SpringApplication.run(MutantsApplication.class, args);</span>
-<span class="nc" id="L25">        instance.setApplicationContext(applicationContext);</span>
-<span class="nc" id="L26">    }</span>
+<span class="nc" id="L18">        final ApplicationContext applicationContext = SpringApplication.run(MutantsApplication.class, args);</span>
+<span class="nc" id="L19">        instance.setApplicationContext(applicationContext);</span>
+<span class="nc" id="L20">    }</span>
 
     public static void init(final ApplicationContext applicationContext) {
-<span class="fc" id="L29">        getInstance().setApplicationContext(applicationContext);</span>
-<span class="fc" id="L30">    }</span>
+<span class="fc" id="L23">        getInstance().setApplicationContext(applicationContext);</span>
+<span class="fc" id="L24">    }</span>
 
     public &lt;T&gt; T getBean(Class&lt;T&gt; beanClass) {
-<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (this.applicationContext == null) {</span>
-<span class="fc" id="L34">            return null;</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        if (this.applicationContext == null) {</span>
+<span class="fc" id="L28">            return null;</span>
         } else {
-<span class="fc" id="L36">            return this.applicationContext.getBean(beanClass);</span>
+<span class="fc" id="L30">            return this.applicationContext.getBean(beanClass);</span>
         }
     }
 }

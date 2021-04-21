@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
@@ -14,8 +15,9 @@ import java.util.concurrent.Executor;
  * @author Martin Inzaurralde - eminzaurralde@gmail.com
  */
 @Configuration
+@EnableScheduling
 @EnableAsync
-<span class="fc" id="L18">public class AsyncConfig {</span>
+<span class="fc" id="L20">public class AsyncConfig {</span>
 
     /**
      * Crea el ejecutor para el pool de hilos que manejan las estadísticas
@@ -29,12 +31,12 @@ import java.util.concurrent.Executor;
             @Value(&quot;${mutant.threads.stats.queueCapacity:1000000}&quot;) int queueCapacity,
             @Value(&quot;${mutant.threads.stats.keepAliveSeconds:60}&quot;) int keepAliveSeconds
     ) {
-<span class="fc" id="L32">        final ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();</span>
-<span class="fc" id="L33">        threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);</span>
-<span class="fc" id="L34">        threadPoolTaskExecutor.setCorePoolSize(corePoolSize);</span>
-<span class="fc" id="L35">        threadPoolTaskExecutor.setQueueCapacity(queueCapacity);</span>
-<span class="fc" id="L36">        threadPoolTaskExecutor.setKeepAliveSeconds(keepAliveSeconds);</span>
-<span class="fc" id="L37">        return threadPoolTaskExecutor;</span>
+<span class="fc" id="L34">        final ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();</span>
+<span class="fc" id="L35">        threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);</span>
+<span class="fc" id="L36">        threadPoolTaskExecutor.setCorePoolSize(corePoolSize);</span>
+<span class="fc" id="L37">        threadPoolTaskExecutor.setQueueCapacity(queueCapacity);</span>
+<span class="fc" id="L38">        threadPoolTaskExecutor.setKeepAliveSeconds(keepAliveSeconds);</span>
+<span class="fc" id="L39">        return threadPoolTaskExecutor;</span>
     }
 
     /**
@@ -49,12 +51,12 @@ import java.util.concurrent.Executor;
             @Value(&quot;${mutant.threads.repository.queueCapacity:1000000}&quot;) int queueCapacity,
             @Value(&quot;${mutant.threads.repository.keepAliveSeconds:60}&quot;) int keepAliveSeconds
     ) {
-<span class="fc" id="L52">        final ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();</span>
-<span class="fc" id="L53">        threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);</span>
-<span class="fc" id="L54">        threadPoolTaskExecutor.setCorePoolSize(corePoolSize);</span>
-<span class="fc" id="L55">        threadPoolTaskExecutor.setQueueCapacity(queueCapacity);</span>
-<span class="fc" id="L56">        threadPoolTaskExecutor.setKeepAliveSeconds(keepAliveSeconds);</span>
-<span class="fc" id="L57">        return threadPoolTaskExecutor;</span>
+<span class="fc" id="L54">        final ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();</span>
+<span class="fc" id="L55">        threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);</span>
+<span class="fc" id="L56">        threadPoolTaskExecutor.setCorePoolSize(corePoolSize);</span>
+<span class="fc" id="L57">        threadPoolTaskExecutor.setQueueCapacity(queueCapacity);</span>
+<span class="fc" id="L58">        threadPoolTaskExecutor.setKeepAliveSeconds(keepAliveSeconds);</span>
+<span class="fc" id="L59">        return threadPoolTaskExecutor;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

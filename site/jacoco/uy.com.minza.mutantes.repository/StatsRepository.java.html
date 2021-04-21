@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatsRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mutantes</a> &gt; <a href="index.source.html" class="el_package">uy.com.minza.mutantes.repository</a> &gt; <span class="el_source">StatsRepository.java</span></div><h1>StatsRepository.java</h1><pre class="source lang-java linenums">package uy.com.minza.mutantes.repository;
+
+import com.mongodb.client.result.UpdateResult;
+import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.*;
+import org.springframework.stereotype.Service;
+import springfox.documentation.annotations.Cacheable;
+import uy.com.minza.mutantes.domain.Stats;
+
+import java.util.List;
+
+@Service
+public class StatsRepository {
+
+    private final MongoTemplate mongoTemplate;
+
+<span class="fc" id="L19">    public StatsRepository(@Autowired MongoTemplate mongoTemplate) {</span>
+<span class="fc" id="L20">        this.mongoTemplate = mongoTemplate;</span>
+<span class="fc" id="L21">    }</span>
+
+    public boolean existsById(final String id) {
+<span class="fc" id="L24">        final CriteriaDefinition criteria = Criteria.where(&quot;_id&quot;).is(id);</span>
+<span class="fc" id="L25">        final Query query = Query.query(criteria);</span>
+<span class="fc" id="L26">        return this.mongoTemplate.exists(query, Stats.class);</span>
+    }
+
+    @Cacheable(&quot;stats&quot;)
+    public Stats findById(final String id) {
+<span class="fc" id="L31">        final CriteriaDefinition criteria = Criteria.where(&quot;_id&quot;).is(id);</span>
+<span class="fc" id="L32">        final Query query = Query.query(criteria);</span>
+<span class="fc" id="L33">        final List&lt;Stats&gt; result = this.mongoTemplate.find(query, Stats.class);</span>
+<span class="pc bpc" id="L34" title="1 of 4 branches missed.">        return result != null &amp;&amp; result.size() == 1 ? result.get(0) : null;</span>
+    }
+
+    public Stats save(final Stats stats) {
+<span class="fc" id="L38">        return this.mongoTemplate.save(stats);</span>
+    }
+
+    public boolean addResult(final String id, final boolean result) {
+<span class="fc" id="L42">        final CriteriaDefinition criteria = Criteria.where(&quot;_id&quot;).is(id);</span>
+<span class="fc" id="L43">        final Query query = Query.query(criteria);</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        final UpdateDefinition updateDefinition = Update.fromDocument(Document.parse(&quot;{ $set: { $inc: { &quot; + (result ? &quot;mutantCount&quot; : &quot;humanCount&quot;) + &quot;: 1 } } }&quot;));</span>
+<span class="fc" id="L45">        final UpdateResult updateResult = this.mongoTemplate.upsert(query, updateDefinition, Stats.class);</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        return updateResult.getModifiedCount() == 1;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

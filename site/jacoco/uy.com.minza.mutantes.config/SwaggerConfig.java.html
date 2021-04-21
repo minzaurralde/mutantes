@@ -8,6 +8,7 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import uy.com.minza.mutantes.MutantsApplication;
 
 import javax.servlet.ServletContext;
@@ -21,6 +22,7 @@ import static springfox.documentation.builders.RequestHandlerSelectors.basePacka
  * @author Martin Inzaurralde - eminzaurralde@gmail.com
  */
 @Configuration
+@EnableSwagger2
 public class SwaggerConfig {
 
     /**
@@ -35,9 +37,9 @@ public class SwaggerConfig {
      */
     public SwaggerConfig(
             @Autowired BuildProperties buildProperties
-<span class="fc" id="L38">    ) {</span>
-<span class="fc" id="L39">        this.buildProperties = buildProperties;</span>
-<span class="fc" id="L40">    }</span>
+<span class="fc" id="L40">    ) {</span>
+<span class="fc" id="L41">        this.buildProperties = buildProperties;</span>
+<span class="fc" id="L42">    }</span>
 
     /**
      * Genera el docklet con la descripción de la API.
@@ -47,12 +49,12 @@ public class SwaggerConfig {
      */
     @Bean
     public Docket api(final ServletContext servletContext) {
-<span class="fc" id="L50">        return new Docket(DocumentationType.SWAGGER_2)</span>
-<span class="fc" id="L51">                .select()</span>
-<span class="fc" id="L52">                .apis(basePackage(MutantsApplication.class.getPackage().getName()))</span>
-<span class="fc" id="L53">                .build()</span>
-<span class="fc" id="L54">                .apiInfo(metadata())</span>
-<span class="fc" id="L55">                .useDefaultResponseMessages(false);</span>
+<span class="fc" id="L52">        return new Docket(DocumentationType.SWAGGER_2)</span>
+<span class="fc" id="L53">                .select()</span>
+<span class="fc" id="L54">                .apis(basePackage(MutantsApplication.class.getPackage().getName()))</span>
+<span class="fc" id="L55">                .build()</span>
+<span class="fc" id="L56">                .apiInfo(metadata())</span>
+<span class="fc" id="L57">                .useDefaultResponseMessages(false);</span>
     }
 
     /**
@@ -61,10 +63,10 @@ public class SwaggerConfig {
      * @return Un objeto ApiInfo con la metatada de la API.
      */
     private ApiInfo metadata() {
-<span class="fc" id="L64">        return new ApiInfo(</span>
+<span class="fc" id="L66">        return new ApiInfo(</span>
                 &quot;Mutant API&quot;,
                 &quot;API REST para la revisión de ADNs de humanos mutantes&quot;,
-<span class="fc" id="L67">                buildProperties.getVersion(),</span>
+<span class="fc" id="L69">                buildProperties.getVersion(),</span>
                 &quot;&quot;,
                 new Contact(&quot;&quot;, &quot;&quot;, &quot;&quot;),
                 &quot;&quot;,
