@@ -11,11 +11,6 @@ services:
       - 8080
       - 9001
 
-#  memcached:
-    #    image: memcached:1.6-alpine
-      #ports:
-      #- "11211:11211"
-
   mongo:
     image: mongo:4.4
     command:
