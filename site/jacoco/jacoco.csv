@@ -2,7 +2,7 @@ GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_
 mutantes,uy.com.minza.mutantes.utils.validation,SquareMatrixValidator,0,19,0,2,0,3,0,5,0,4
 mutantes,uy.com.minza.mutantes.utils.validation,MatrixEntriesValidator,0,35,0,2,0,7,0,5,0,4
 mutantes,uy.com.minza.mutantes.repository,StatsRepository,0,88,1,7,0,16,1,8,0,5
-mutantes,uy.com.minza.mutantes,MutantsApplication,8,31,0,2,3,9,1,7,1,6
+mutantes,uy.com.minza.mutantes,MutantsApplication,7,40,0,4,3,11,1,8,1,6
 mutantes,uy.com.minza.mutantes.controller,StatsController,0,16,0,0,0,5,0,2,0,2
 mutantes,uy.com.minza.mutantes.controller,MutantController,0,26,0,2,0,7,0,3,0,2
 mutantes,uy.com.minza.mutantes.error.handler,RestExceptionHandler,16,245,0,0,3,89,1,16,1,16

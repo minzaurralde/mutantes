@@ -43,7 +43,8 @@ public class ADNCheckServiceTest {
         MockitoAnnotations.openMocks(this);
         MutantsApplication.init(this.applicationContext);
         Mockito.clearInvocations(this.stringUtils);
-        Stream.concat(Stream.concat(Arrays.stream(DNA_OK_1), Arrays.stream(DNA_OK_2)), Stream.concat(Arrays.stream(DNA_NOT_OK_1), Arrays.stream(DNA_INVALID_COL_LEN)))
+        Stream.concat(Stream.concat(Arrays.stream(DNAS_OK), Arrays.stream(DNAS_NOT_OK)), Arrays.stream(DNAS_INVALID))
+                .flatMap(Arrays::stream)
                 .filter(s -> s
                         .replaceAll("A", "")
                         .replaceAll("T", "")
@@ -55,7 +56,8 @@ public class ADNCheckServiceTest {
                 .forEach(row -> Mockito
                         .when(this.stringUtils.containsOnly(Mockito.eq(row), Mockito.any(char[].class)))
                         .thenReturn(true));
-        Stream.concat(Stream.concat(Arrays.stream(DNA_OK_1), Arrays.stream(DNA_OK_2)), Stream.concat(Arrays.stream(DNA_NOT_OK_1), Arrays.stream(DNA_INVALID_COL_LEN)))
+        Stream.concat(Stream.concat(Arrays.stream(DNAS_OK), Arrays.stream(DNAS_NOT_OK)), Arrays.stream(DNAS_INVALID))
+                .flatMap(Arrays::stream)
                 .filter(s -> s
                         .replaceAll("A", "")
                         .replaceAll("T", "")
@@ -67,29 +69,35 @@ public class ADNCheckServiceTest {
                 .forEach(row -> Mockito
                         .when(this.stringUtils.containsOnly(Mockito.eq(row), Mockito.any(char[].class)))
                         .thenReturn(false));
-/*        Mockito.when(this.stringUtils.containsOnly(Mockito.eq("TT5TGT"), Mockito.any(char[].class)))
-                .thenReturn(false);
-        Mockito.when(this.stringUtils.containsOnly(Mockito.eq("TTaTGT"), Mockito.any(char[].class)))
-                .thenReturn(false);
-        Mockito.when(this.stringUtils.containsOnly(Mockito.eq("TTZTGT"), Mockito.any(char[].class)))
-                .thenReturn(false);*/
     }
 
     //region isMutant
 
     @Test
     public void isMutantOKTest() {
-        Assertions.assertTrue(this.adnCheckService.isMutant(DNA_OK_1));
-    }
-
-    @Test
-    public void isMutantOK2Test() {
-        Assertions.assertTrue(this.adnCheckService.isMutant(DNA_OK_2));
+        long init = System.currentTimeMillis();
+        boolean result1 = this.adnCheckService.isMutant(DNAS_OK[6]);
+        long checkpoint = System.currentTimeMillis();
+        boolean result2 = this.adnCheckService.isMutant2(DNAS_OK[6]);
+        long end = System.currentTimeMillis();
+        System.out.println("isMutant " + (checkpoint - init) + "ms");
+        System.out.println("isMutant2 " + (end - checkpoint) + "ms");
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(result1),
+                () -> Assertions.assertTrue(result2)
+        );
+        /*Assertions.assertArrayEquals(
+                Arrays.stream(DNAS_OK).map(dna -> true).toArray(),
+                Arrays.stream(DNAS_OK).map(dna -> this.adnCheckService.isMutant(dna)).toArray()
+        );*/
     }
 
     @Test
     public void isMutantNotOkTest() {
-        Assertions.assertFalse(this.adnCheckService.isMutant(DNA_NOT_OK_1));
+        Assertions.assertArrayEquals(
+                Arrays.stream(DNAS_NOT_OK).map(dna -> false).toArray(),
+                Arrays.stream(DNAS_NOT_OK).map(dna -> this.adnCheckService.isMutant(dna)).toArray()
+        );
     }
 
     @Test
@@ -133,13 +141,13 @@ public class ADNCheckServiceTest {
 
     @Test
     public void validateValid1Test() {
-        this.adnCheckService.validate(DNA_OK_1);
+        Arrays.stream(DNAS_OK).forEach(dna -> this.adnCheckService.validate(dna));
         Assertions.assertTrue(true);
     }
 
     @Test
-    public void validateValid2Test() {
-        this.adnCheckService.validate(DNA_OK_2);
+    public void validateValidT2est() {
+        Arrays.stream(DNAS_NOT_OK).forEach(dna -> this.adnCheckService.validate(dna));
         Assertions.assertTrue(true);
     }
 

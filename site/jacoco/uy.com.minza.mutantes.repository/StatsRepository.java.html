@@ -41,7 +41,7 @@ public class StatsRepository {
     public boolean addResult(final String id, final boolean result) {
 <span class="fc" id="L42">        final CriteriaDefinition criteria = Criteria.where(&quot;_id&quot;).is(id);</span>
 <span class="fc" id="L43">        final Query query = Query.query(criteria);</span>
-<span class="fc bfc" id="L44" title="All 2 branches covered.">        final UpdateDefinition updateDefinition = Update.fromDocument(Document.parse(&quot;{ $set: { $inc: { &quot; + (result ? &quot;mutantCount&quot; : &quot;humanCount&quot;) + &quot;: 1 } } }&quot;));</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        final UpdateDefinition updateDefinition = Update.fromDocument(Document.parse(&quot;{ $inc: { &quot; + (result ? &quot;mutantCount&quot; : &quot;humanCount&quot;) + &quot;: 1 } }&quot;));</span>
 <span class="fc" id="L45">        final UpdateResult updateResult = this.mongoTemplate.upsert(query, updateDefinition, Stats.class);</span>
 <span class="fc bfc" id="L46" title="All 2 branches covered.">        return updateResult.getModifiedCount() == 1;</span>
     }
