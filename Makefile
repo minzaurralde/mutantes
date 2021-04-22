@@ -13,7 +13,7 @@ run-local:
 
 build:
 	mvn clean package site -Pcloud
-	if [[ -d "site" ]]; then rm -rf site; fi
+	if [ -d ./site ]; then rm -rf site; fi
 	cp -r target/site .
 
 deploy:

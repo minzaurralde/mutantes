@@ -5,8 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Arrays;
+import java.util.Objects;
 
+/**
+ *
+ */
 @Builder
 @Getter
 public class OverallStatus {
@@ -22,12 +25,19 @@ public class OverallStatus {
     private EvaluationSectionStatus[] columnStatuses;
     @Setter
     private String[] dna;
+    @Setter(AccessLevel.PRIVATE)
     private int sequenceMinLength; // Largo mínimo de las secuencias a buscar
 
+    /**
+     * Inicializa las estructuras y parámetros generales en base al ADN. Previo a la inicialización, se debe setear el ADN
+     */
     public void init() {
-        sequenceMinLength = 4;
+        Objects.requireNonNull(this.getDna(), "El adn no puede ser nulo");
+        // Incializamos parámetros generales y contadores
+        this.setSequenceMinLength(4);
         this.setSequenceCount(0);
 
+        // Inicializamos las estructuras para contabilizar secuencias en las diagonales
         int reviewableDiagonalQty = this.getMatrixSize() >= this.getSequenceMinLength() ?
                 (this.getMatrixSize() - (this.getSequenceMinLength() - 1)) * 2 - 1 :
                 0;
@@ -38,6 +48,7 @@ public class OverallStatus {
             this.getInvertedDiagonalStatuses()[i] = EvaluationSectionStatus.builder().build().init();
         }
 
+        // Inicializamos las estructuras para contabilizar secuencias en filas y columnas
         this.setRowStatuses(new EvaluationSectionStatus[this.getDna().length]);
         this.setColumnStatuses(new EvaluationSectionStatus[this.getDna().length]);
         for (int i = 0; i < this.getDna().length; i++) {
@@ -46,21 +57,42 @@ public class OverallStatus {
         }
     }
 
+    /**
+     * Incrementa el contador de secuencias
+     */
     private void incrementSequenceCount() {
         this.setSequenceCount(this.getSequenceCount() + 1);
     }
 
+    /**
+     * Verificar una sección en particular en un elemento de la matriz
+     *
+     * @param sectionStatus Sección a verificar
+     * @param row   Indice de fila
+     * @param column    Indice de columna
+     */
     private void verify(EvaluationSectionStatus sectionStatus, int row, int column) {
         if (sectionStatus.verify(this.getDna(), row, column, this.getSequenceMinLength())) {
             this.incrementSequenceCount();
         }
     }
 
+    /**
+     * Obtiene el tamaño de la matriz
+     *
+     * @return  El tamaño de la matriz de ADN
+     */
     private int getMatrixSize() {
         return this.getDna().length;
     }
 
+    /**
+     * Evalua el ADN en busca de secuencias
+     *
+     * @return true si el ADN es mutante, false si es humano
+     */
     public boolean evaluate() {
+        this.init();
         for (int i = 0; i < this.getMatrixSize(); i++) {
             int mainDiagonalIndex = this.getMatrixSize() - this.getSequenceMinLength();
             this.verify(this.getDiagonalStatuses()[mainDiagonalIndex], i, i);
@@ -80,11 +112,6 @@ public class OverallStatus {
                 this.verify(this.getColumnStatuses()[i], j, i);
             }
         }
-        System.out.println("Sequence: " + this.getSequenceCount());
-        System.out.println("Rows: " + Arrays.toString(this.getRowStatuses()));
-        System.out.println("Columns: " + Arrays.toString(this.getColumnStatuses()));
-        System.out.println("Diagonal: " + Arrays.toString(this.getDiagonalStatuses()));
-        System.out.println("Inverted Diagonal: " + Arrays.toString(this.getInvertedDiagonalStatuses()));
         return this.getSequenceCount() >= 2;
     }
 }

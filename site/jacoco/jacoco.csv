@@ -1,4 +1,8 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+mutantes,uy.com.minza.mutantes.service.domain,OverallStatus.OverallStatusBuilder,51,26,0,0,0,1,7,3,7,3
+mutantes,uy.com.minza.mutantes.service.domain,EvaluationSectionStatus.EvaluationSectionStatusBuilder,23,13,0,0,0,1,4,2,4,2
+mutantes,uy.com.minza.mutantes.service.domain,OverallStatus,5,346,2,20,1,54,3,29,1,20
+mutantes,uy.com.minza.mutantes.service.domain,EvaluationSectionStatus,8,89,0,4,1,23,1,13,1,11
 mutantes,uy.com.minza.mutantes.utils.validation,SquareMatrixValidator,0,19,0,2,0,3,0,5,0,4
 mutantes,uy.com.minza.mutantes.utils.validation,MatrixEntriesValidator,0,35,0,2,0,7,0,5,0,4
 mutantes,uy.com.minza.mutantes.repository,StatsRepository,0,88,1,7,0,16,1,8,0,5
@@ -24,7 +28,7 @@ mutantes,uy.com.minza.mutantes.dto,StatsResultsDTO,10,112,5,7,0,7,5,14,0,13
 mutantes,uy.com.minza.mutantes.service,UpdaterService,0,31,0,2,0,8,0,3,0,2
 mutantes,uy.com.minza.mutantes.service,StatsService,7,81,4,6,1,22,4,5,0,4
 mutantes,uy.com.minza.mutantes.service,MutantService,0,22,0,0,0,7,0,2,0,2
-mutantes,uy.com.minza.mutantes.service,ADNCheckService,0,106,0,16,0,32,0,11,0,3
+mutantes,uy.com.minza.mutantes.service,ADNCheckService,0,43,0,2,0,12,0,4,0,3
 mutantes,uy.com.minza.mutantes.service,HistoricADNService,0,27,0,2,0,7,0,3,0,2
 mutantes,uy.com.minza.mutantes.error.exception,ValidationException,0,4,0,0,0,2,0,1,0,1
 mutantes,uy.com.minza.mutantes.error.exception,MutantException,0,4,0,0,0,2,0,1,0,1

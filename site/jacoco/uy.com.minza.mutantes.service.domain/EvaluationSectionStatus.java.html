@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EvaluationSectionStatus.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mutantes</a> &gt; <a href="index.source.html" class="el_package">uy.com.minza.mutantes.service.domain</a> &gt; <span class="el_source">EvaluationSectionStatus.java</span></div><h1>EvaluationSectionStatus.java</h1><pre class="source lang-java linenums">package uy.com.minza.mutantes.service.domain;
+
+import lombok.*;
+
+<span class="pc" id="L5">@Builder</span>
+@Getter
+<span class="nc" id="L7">@ToString</span>
+class EvaluationSectionStatus {
+<span class="fc" id="L9">    @Setter(AccessLevel.PRIVATE)</span>
+<span class="fc" id="L10">    private char previousChar;</span>
+<span class="fc" id="L11">    @Setter(AccessLevel.PRIVATE)</span>
+<span class="fc" id="L12">    private int currentSequenceLength;</span>
+<span class="fc" id="L13">    @Setter(AccessLevel.PRIVATE)</span>
+<span class="fc" id="L14">    private String sectionValue;</span>
+
+    EvaluationSectionStatus init() {
+<span class="fc" id="L17">        this.reset();</span>
+<span class="fc" id="L18">        this.setPreviousChar('0');</span>
+<span class="fc" id="L19">        this.sectionValue = &quot;&quot;;</span>
+<span class="fc" id="L20">        return this;</span>
+    }
+
+    private void reset() {
+<span class="fc" id="L24">        this.setCurrentSequenceLength(1);</span>
+<span class="fc" id="L25">    }</span>
+
+    boolean verify(final String[] dna, final int row, final int column, final int sequenceMinLength) {
+<span class="fc" id="L28">        final char actual = dna[row].charAt(column);</span>
+<span class="fc" id="L29">        boolean addedNewSequence = false;</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        if (this.getPreviousChar() == actual) {</span>
+<span class="fc" id="L31">            this.setCurrentSequenceLength(this.getCurrentSequenceLength() + 1);</span>
+<span class="fc bfc" id="L32" title="All 2 branches covered.">            if (this.getCurrentSequenceLength() == sequenceMinLength) {</span>
+<span class="fc" id="L33">                addedNewSequence = true;</span>
+            }
+        } else {
+<span class="fc" id="L36">            reset();</span>
+        }
+<span class="fc" id="L38">        this.setSectionValue(this.getSectionValue() + actual);</span>
+<span class="fc" id="L39">        this.setPreviousChar(actual);</span>
+<span class="fc" id="L40">        return addedNewSequence;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OverallStatus.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mutantes</a> &gt; <a href="index.source.html" class="el_package">uy.com.minza.mutantes.service.domain</a> &gt; <span class="el_source">OverallStatus.java</span></div><h1>OverallStatus.java</h1><pre class="source lang-java linenums">package uy.com.minza.mutantes.service.domain;
+
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Objects;
+
+/**
+ *
+ */
+<span class="pc" id="L13">@Builder</span>
+@Getter
+public class OverallStatus {
+<span class="fc" id="L16">    @Setter(AccessLevel.PRIVATE)</span>
+<span class="fc" id="L17">    private int sequenceCount;</span>
+<span class="fc" id="L18">    @Setter(AccessLevel.PRIVATE)</span>
+<span class="fc" id="L19">    private EvaluationSectionStatus[] diagonalStatuses;</span>
+<span class="fc" id="L20">    @Setter(AccessLevel.PRIVATE)</span>
+<span class="fc" id="L21">    private EvaluationSectionStatus[] invertedDiagonalStatuses;</span>
+<span class="fc" id="L22">    @Setter(AccessLevel.PRIVATE)</span>
+<span class="fc" id="L23">    private EvaluationSectionStatus[] rowStatuses;</span>
+<span class="fc" id="L24">    @Setter(AccessLevel.PRIVATE)</span>
+<span class="fc" id="L25">    private EvaluationSectionStatus[] columnStatuses;</span>
+<span class="nc" id="L26">    @Setter</span>
+<span class="fc" id="L27">    private String[] dna;</span>
+<span class="fc" id="L28">    @Setter(AccessLevel.PRIVATE)</span>
+<span class="fc" id="L29">    private int sequenceMinLength; // Largo mínimo de las secuencias a buscar</span>
+
+    /**
+     * Inicializa las estructuras y parámetros generales en base al ADN. Previo a la inicialización, se debe setear el ADN
+     */
+    public void init() {
+<span class="fc" id="L35">        Objects.requireNonNull(this.getDna(), &quot;El adn no puede ser nulo&quot;);</span>
+        // Incializamos parámetros generales y contadores
+<span class="fc" id="L37">        this.setSequenceMinLength(4);</span>
+<span class="fc" id="L38">        this.setSequenceCount(0);</span>
+
+        // Inicializamos las estructuras para contabilizar secuencias en las diagonales
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        int reviewableDiagonalQty = this.getMatrixSize() &gt;= this.getSequenceMinLength() ?</span>
+<span class="fc" id="L42">                (this.getMatrixSize() - (this.getSequenceMinLength() - 1)) * 2 - 1 :</span>
+<span class="pc" id="L43">                0;</span>
+<span class="fc" id="L44">        this.setDiagonalStatuses(new EvaluationSectionStatus[reviewableDiagonalQty]);</span>
+<span class="fc" id="L45">        this.setInvertedDiagonalStatuses(new EvaluationSectionStatus[reviewableDiagonalQty]);</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        for (int i = 0; i &lt; reviewableDiagonalQty; i++) {</span>
+<span class="fc" id="L47">            this.getDiagonalStatuses()[i] = EvaluationSectionStatus.builder().build().init();</span>
+<span class="fc" id="L48">            this.getInvertedDiagonalStatuses()[i] = EvaluationSectionStatus.builder().build().init();</span>
+        }
+
+        // Inicializamos las estructuras para contabilizar secuencias en filas y columnas
+<span class="fc" id="L52">        this.setRowStatuses(new EvaluationSectionStatus[this.getDna().length]);</span>
+<span class="fc" id="L53">        this.setColumnStatuses(new EvaluationSectionStatus[this.getDna().length]);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        for (int i = 0; i &lt; this.getDna().length; i++) {</span>
+<span class="fc" id="L55">            this.getRowStatuses()[i] = EvaluationSectionStatus.builder().build().init();</span>
+<span class="fc" id="L56">            this.getColumnStatuses()[i] = EvaluationSectionStatus.builder().build().init();</span>
+        }
+<span class="fc" id="L58">    }</span>
+
+    /**
+     * Incrementa el contador de secuencias
+     */
+    private void incrementSequenceCount() {
+<span class="fc" id="L64">        this.setSequenceCount(this.getSequenceCount() + 1);</span>
+<span class="fc" id="L65">    }</span>
+
+    /**
+     * Verificar una sección en particular en un elemento de la matriz
+     *
+     * @param sectionStatus Sección a verificar
+     * @param row   Indice de fila
+     * @param column    Indice de columna
+     */
+    private void verify(EvaluationSectionStatus sectionStatus, int row, int column) {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (sectionStatus.verify(this.getDna(), row, column, this.getSequenceMinLength())) {</span>
+<span class="fc" id="L76">            this.incrementSequenceCount();</span>
+        }
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Obtiene el tamaño de la matriz
+     *
+     * @return  El tamaño de la matriz de ADN
+     */
+    private int getMatrixSize() {
+<span class="fc" id="L86">        return this.getDna().length;</span>
+    }
+
+    /**
+     * Evalua el ADN en busca de secuencias
+     *
+     * @return true si el ADN es mutante, false si es humano
+     */
+    public boolean evaluate() {
+<span class="fc" id="L95">        this.init();</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        for (int i = 0; i &lt; this.getMatrixSize(); i++) {</span>
+<span class="fc" id="L97">            int mainDiagonalIndex = this.getMatrixSize() - this.getSequenceMinLength();</span>
+<span class="fc" id="L98">            this.verify(this.getDiagonalStatuses()[mainDiagonalIndex], i, i);</span>
+<span class="fc" id="L99">            this.verify(this.getInvertedDiagonalStatuses()[mainDiagonalIndex], i, this.getMatrixSize() - 1 - i);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">            for (int j = 0; j &lt; this.getMatrixSize(); j++) {</span>
+<span class="fc bfc" id="L101" title="All 4 branches covered.">                if (j &gt; 0 &amp;&amp; j &lt; this.getMatrixSize() - (this.getSequenceMinLength() - 1)) {</span>
+<span class="fc" id="L102">                    int upperDiagonalIndex = this.getMatrixSize() - this.getSequenceMinLength() + j;</span>
+<span class="fc" id="L103">                    int lowerDiagonalIndex = this.getMatrixSize() - this.getSequenceMinLength() - j;</span>
+<span class="pc bpc" id="L104" title="1 of 4 branches missed.">                    if (i + j &gt;= 0 &amp;&amp; i + j &lt; this.getMatrixSize()) {</span>
+<span class="fc" id="L105">                        this.verify(this.getDiagonalStatuses()[upperDiagonalIndex], i, i + j);</span>
+<span class="fc" id="L106">                        this.verify(this.getInvertedDiagonalStatuses()[upperDiagonalIndex], i, this.getMatrixSize() - 1 - i - j);</span>
+<span class="fc" id="L107">                        this.verify(this.getDiagonalStatuses()[lowerDiagonalIndex], i + j, i);</span>
+<span class="fc" id="L108">                        this.verify(this.getInvertedDiagonalStatuses()[lowerDiagonalIndex], i + j, this.getMatrixSize() - 1 - i);</span>
+                    }
+                }
+<span class="fc" id="L111">                this.verify(this.getRowStatuses()[i], i, j);</span>
+<span class="fc" id="L112">                this.verify(this.getColumnStatuses()[i], j, i);</span>
+            }
+        }
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        return this.getSequenceCount() &gt;= 2;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

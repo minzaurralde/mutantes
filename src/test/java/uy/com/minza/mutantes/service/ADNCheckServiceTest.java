@@ -75,21 +75,10 @@ public class ADNCheckServiceTest {
 
     @Test
     public void isMutantOKTest() {
-        long init = System.currentTimeMillis();
-        boolean result1 = this.adnCheckService.isMutant(DNAS_OK[6]);
-        long checkpoint = System.currentTimeMillis();
-        boolean result2 = this.adnCheckService.isMutant2(DNAS_OK[6]);
-        long end = System.currentTimeMillis();
-        System.out.println("isMutant " + (checkpoint - init) + "ms");
-        System.out.println("isMutant2 " + (end - checkpoint) + "ms");
-        Assertions.assertAll(
-                () -> Assertions.assertTrue(result1),
-                () -> Assertions.assertTrue(result2)
-        );
-        /*Assertions.assertArrayEquals(
+        Assertions.assertArrayEquals(
                 Arrays.stream(DNAS_OK).map(dna -> true).toArray(),
                 Arrays.stream(DNAS_OK).map(dna -> this.adnCheckService.isMutant(dna)).toArray()
-        );*/
+        );
     }
 
     @Test
