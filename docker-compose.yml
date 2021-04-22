@@ -3,6 +3,7 @@ services:
   mutantes:
     image: mutantes:latest
     environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
       - "MEMCACHED_CACHE_PROVIDER=static"
       - "MEMCACHED_CACHE_SERVERS=memcached:11211"
       - "SPRING_DATA_MONGODB_URI=mongodb://root:example@mongo:27017/mutantes"
@@ -10,15 +11,19 @@ services:
       - 8080
       - 9001
 
-  memcached:
-    image: memcached:1.6-alpine
-    ports:
-      - "11211:11211"
+#  memcached:
+    #    image: memcached:1.6-alpine
+      #ports:
+      #- "11211:11211"
 
   mongo:
     image: mongo:4.4
+    command:
+      - --auth
+      - --bind_ip_all
     environment:
       - "MONGO_INITDB_ROOT_USERNAME=root"
       - "MONGO_INITDB_ROOT_PASSWORD=example"
+      - "MONGO_INITDB_DATABASE=mutantes"
     ports:
       - "27017:27017"

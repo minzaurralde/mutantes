@@ -41,7 +41,7 @@ public class StatsRepository {
     public boolean addResult(final String id, final boolean result) {
         final CriteriaDefinition criteria = Criteria.where("_id").is(id);
         final Query query = Query.query(criteria);
-        final UpdateDefinition updateDefinition = Update.fromDocument(Document.parse("{ $set: { $inc: { " + (result ? "mutantCount" : "humanCount") + ": 1 } } }"));
+        final UpdateDefinition updateDefinition = Update.fromDocument(Document.parse("{ $inc: { " + (result ? "mutantCount" : "humanCount") + ": 1 } }"));
         final UpdateResult updateResult = this.mongoTemplate.upsert(query, updateDefinition, Stats.class);
         return updateResult.getModifiedCount() == 1;
     }

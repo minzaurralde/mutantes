@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import uy.com.minza.mutantes.service.StatsService;
 
 @SpringBootApplication(scanBasePackages = {"uy.com.minza.mutantes"})
 public class MutantsApplication {
@@ -16,11 +17,14 @@ public class MutantsApplication {
 
     public static void main(String[] args) {
         final ApplicationContext applicationContext = SpringApplication.run(MutantsApplication.class, args);
-        instance.setApplicationContext(applicationContext);
+        init(applicationContext);
     }
 
     public static void init(final ApplicationContext applicationContext) {
         getInstance().setApplicationContext(applicationContext);
+        if (getInstance().getBean(StatsService.class) != null) {
+            getInstance().getBean(StatsService.class).init();
+        }
     }
 
     public <T> T getBean(Class<T> beanClass) {

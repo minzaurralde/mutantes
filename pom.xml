@@ -186,7 +186,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <executable>true</executable>
-                    <profiles>docker</profiles>
                 </configuration>
                 <executions>
                     <execution>
@@ -321,7 +320,7 @@
 
     <profiles>
         <profile>
-            <id>cloud</id>
+            <id>default</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -330,12 +329,12 @@
             </properties>
         </profile>
         <profile>
-            <id>local</id>
+            <id>cloud</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <spring.profiles.active>local</spring.profiles.active>
+                <spring.profiles.active>cloud</spring.profiles.active>
             </properties>
         </profile>
         <profile>
@@ -345,6 +344,17 @@
             </activation>
             <properties>
                 <spring.profiles.active>docker</spring.profiles.active>
+                <skipTests>true</skipTests>
+            </properties>
+        </profile>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>local</spring.profiles.active>
+                <skipTests>true</skipTests>
             </properties>
         </profile>
     </profiles>
